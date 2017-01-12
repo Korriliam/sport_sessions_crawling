@@ -28,25 +28,42 @@ def Event(DeclarativeBase):
     location = Column('location', String, nullable=True)
     date = Column('date', DateTime, nullable=True)
     length = Column('length', Integer)
+    session = relationship('Session')
 
 def Sport(DeclarativeBase):
     __tablename__ = "sport"
 
     id = Column(Integer, primary_key=True)
+    name = Column('name', String)
+    session = relationship('Session')
 
 def Source(DeclarativeBase):
     __tablename__ = "source"
 
     id = Column(Integer, primary_key=True)
-
-
-def Session(DeclarativeBase):
-    __tablename__ = "session"
-
-    id = Column(Integer, primary_key=True)
-
+    name = Column('name', String)
+    url = Column()
+    session = relationship('Session')
 
 def Track(DeclarativeBase):
     __tablename__ = "track"
 
     id = Column(Integer, primary_key=True)
+    filetype = Column('filetype', String)
+    session = relationship('Session')
+    elevation = Column('elevation', Integer)
+    distance = Column('distance', Float)
+    content = Column('content', Binary)
+
+def Session(DeclarativeBase):
+    __tablename__ = "session"
+
+    id = Column(Integer, primary_key=True)
+    energy = Column('energy', Integer)
+    average_speed = Column('average_speed', Float)
+    duration = Column('duration', Time)
+    date = Column('date', DateTime)
+    id_track = Column(Integer, ForeignKey('track.id'))
+    id_source = Column(Integer, ForeignKey('source.id'))
+    id_sport = Column(Integer, ForeignKey('sport.id'))
+    id_event = Column(Integer, ForeignKey('even.id'))
