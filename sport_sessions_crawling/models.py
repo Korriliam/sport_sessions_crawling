@@ -1,5 +1,6 @@
 from sqlalchemy import *
 from sqlalchemy.engine.url import URL
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 import sport_sessions_crawling.settings as settings
@@ -17,9 +18,9 @@ def create_tables(engine):
     """
     Creating our tables
     """
-    DeclarativeBase.metadata.create_all(engine)
+    DeclarativeBase.metadata.create_all(engine, checkfirst=True)
 
-def Event(DeclarativeBase):
+class Event(DeclarativeBase):
     __tablename__ = "event"
 
     id = Column(Integer, primary_key=True)
@@ -30,22 +31,22 @@ def Event(DeclarativeBase):
     length = Column('length', Integer)
     session = relationship('Session')
 
-def Sport(DeclarativeBase):
+class Sport(DeclarativeBase):
     __tablename__ = "sport"
 
     id = Column(Integer, primary_key=True)
     name = Column('name', String)
     session = relationship('Session')
 
-def Source(DeclarativeBase):
+class Source(DeclarativeBase):
     __tablename__ = "source"
 
     id = Column(Integer, primary_key=True)
     name = Column('name', String)
-    url = Column()
+    url = Column('url', String)
     session = relationship('Session')
 
-def Track(DeclarativeBase):
+class Track(DeclarativeBase):
     __tablename__ = "track"
 
     id = Column(Integer, primary_key=True)
@@ -53,9 +54,9 @@ def Track(DeclarativeBase):
     session = relationship('Session')
     elevation = Column('elevation', Integer)
     distance = Column('distance', Float)
-    content = Column('content', Binary)
+    content = Column('content', BLOB)
 
-def Session(DeclarativeBase):
+class Session(DeclarativeBase):
     __tablename__ = "session"
 
     id = Column(Integer, primary_key=True)
@@ -66,4 +67,4 @@ def Session(DeclarativeBase):
     id_track = Column(Integer, ForeignKey('track.id'))
     id_source = Column(Integer, ForeignKey('source.id'))
     id_sport = Column(Integer, ForeignKey('sport.id'))
-    id_event = Column(Integer, ForeignKey('even.id'))
+    id_event = Column(Integer, ForeignKey('event.id'))
